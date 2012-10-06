@@ -17,9 +17,17 @@ class TicTacToe
   end
 end
 
+
+class InvalidPosition < RuntimeError ;end
+class InvalidPositionFormat < RuntimeError ;end
 class PositionTranslator
-  X_POSITION_MAPPING = {'a' => 0, 'b' => 1, 'c' => 2}
+  FRIENDLY_X = 'a'..'c'
+  FRIENDLY_Y = '1'..'3'
+
   def translate(friendly_position)
-    x,y = X_POSITION_MAPPING[friendly_position[0]], (friendly_position[1].to_i-1)
+    raise InvalidPositionFormat unless /^(\D+)(\d+)$/.match(friendly_position)
+    x, y = FRIENDLY_X.find_index($1), FRIENDLY_Y.find_index($2)
+    raise InvalidPosition if x.nil? || y.nil?
+    return [x, y]
   end
 end
